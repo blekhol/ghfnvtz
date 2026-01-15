@@ -11,8 +11,6 @@
 			int select = 0; //mennyiszer lett már selectelve
 			(int, int) selectStartPos = (0, 0);
 			(int, int) selectEndPos = (0, 0);
-			
-			window.DrawLine((0, 0), (100, 10), 'P');
 
 			ConsoleKeyInfo key;
             while (true)
@@ -179,16 +177,19 @@
 						if (mode == "select" && select == 0)
 						{
 							selectStartPos = (Console.CursorLeft, Console.CursorTop);
+							window.DrawAtPos((Console.CursorLeft, Console.CursorTop),'c');
 							select++;
 						}
 						else if (mode == "select" && select == 1)
 						{
 							selectEndPos = (Console.CursorLeft, Console.CursorTop);
+							window.DrawAtPos((Console.CursorLeft, Console.CursorTop), 'c');
 
-							window.DrawLine(selectStartPos, selectEndPos, 'f');
+							window.DrawRectangle(selectStartPos, selectEndPos, 'P');
 
 							selectStartPos = (0, 0);
 							selectEndPos = (0, 0);
+							select = 0;
 							mode = "";
 						}
 						else

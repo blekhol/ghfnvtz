@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 namespace ghfnvtz
 {
@@ -29,8 +30,20 @@ namespace ghfnvtz
             SetCurrentConsoleFontEx(hConsole, false, ref info);
         }
 
+        internal static void EnableTrueColor()
+        {
+			var handle = GetStdHandle(-11);
+			GetConsoleMode(handle, out uint mode);
+			SetConsoleMode(handle, mode | 0x0004);
+		}
 
-        [DllImport("kernel32.dll")]
+		[DllImport("kernel32.dll")]
+		static extern bool GetConsoleMode(IntPtr hConsoleHandle, out uint lpMode);
+
+		[DllImport("kernel32.dll")]
+		static extern bool SetConsoleMode(IntPtr hConsoleHandle, uint dwMode);
+
+		[DllImport("kernel32.dll")]
         private static extern IntPtr GetStdHandle(int nStdHandle);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]

@@ -8,6 +8,11 @@
             window.Setup();
 
 			string mode = "";
+			int select = 0; //mennyiszer lett már selectelve
+			(int, int) selectStartPos = (0, 0);
+			(int, int) selectEndPos = (0, 0);
+			
+			window.DrawLine((0, 0), (100, 10), 'P');
 
 			ConsoleKeyInfo key;
             while (true)
@@ -71,11 +76,11 @@
 						{
 							if (key.Modifiers == ConsoleModifiers.Shift)
 							{
-								window.DrawAtPos('P');
+								window.DrawAtPos((Console.CursorLeft, Console.CursorTop),'P');
 							}
 							else
 							{
-								window.DrawAtPos('p');
+								window.DrawAtPos((Console.CursorLeft, Console.CursorTop),'p');
 							}
 						}
 						break;
@@ -84,11 +89,11 @@
 						{
 							if (key.Modifiers == ConsoleModifiers.Shift)
 							{
-								window.DrawAtPos('F');
+								window.DrawAtPos((Console.CursorLeft, Console.CursorTop),'F');
 							}
 							else
 							{
-								window.DrawAtPos('f');
+								window.DrawAtPos((Console.CursorLeft, Console.CursorTop),'f');
 							}
 						}
 						break;
@@ -97,11 +102,11 @@
 						{
 							if (key.Modifiers == ConsoleModifiers.Shift)
 							{
-								window.DrawAtPos('K');
+								window.DrawAtPos((Console.CursorLeft, Console.CursorTop),'K');
 							}
 							else
 							{
-								window.DrawAtPos('k');
+								window.DrawAtPos((Console.CursorLeft, Console.CursorTop),'k');
 							}
 						}
 						break;
@@ -110,11 +115,11 @@
 						{
 							if (key.Modifiers == ConsoleModifiers.Shift)
 							{
-								window.DrawAtPos('Z');
+								window.DrawAtPos((Console.CursorLeft, Console.CursorTop),'Z');
 							}
 							else
 							{
-								window.DrawAtPos('z');
+								window.DrawAtPos((Console.CursorLeft, Console.CursorTop),'z');
 							}
 						}
 						break;
@@ -123,11 +128,11 @@
 						{
 							if (key.Modifiers == ConsoleModifiers.Shift)
 							{
-								window.DrawAtPos('C');
+								window.DrawAtPos((Console.CursorLeft, Console.CursorTop),'C');
 							}
 							else
 							{
-								window.DrawAtPos('c');
+								window.DrawAtPos((Console.CursorLeft, Console.CursorTop),'c');
 							}
 						}
 						break;
@@ -136,11 +141,11 @@
 						{
 							if (key.Modifiers == ConsoleModifiers.Shift)
 							{
-								window.DrawAtPos('M');
+								window.DrawAtPos((Console.CursorLeft, Console.CursorTop),'M');
 							}
 							else
 							{
-								window.DrawAtPos('m');
+								window.DrawAtPos((Console.CursorLeft, Console.CursorTop),'m');
 							}
 						}
 						break;
@@ -149,11 +154,11 @@
 						{
 							if (key.Modifiers == ConsoleModifiers.Shift)
 							{
-								window.DrawAtPos('S');
+								window.DrawAtPos((Console.CursorLeft, Console.CursorTop),'S');
 							}
 							else
 							{
-								window.DrawAtPos('s');
+								window.DrawAtPos((Console.CursorLeft, Console.CursorTop),'s');
 							}
 						}
 						break;
@@ -162,12 +167,33 @@
 						{
 							if (key.Modifiers == ConsoleModifiers.Shift)
 							{
-								window.DrawAtPos('X');
+								window.DrawAtPos((Console.CursorLeft, Console.CursorTop),'X');
 							}
 							else
 							{
-								window.DrawAtPos('x');
+								window.DrawAtPos((Console.CursorLeft, Console.CursorTop),'x');
 							}
+						}
+						break;
+					case ConsoleKey.Enter:
+						if (mode == "select" && select == 0)
+						{
+							selectStartPos = (Console.CursorLeft, Console.CursorTop);
+							select++;
+						}
+						else if (mode == "select" && select == 1)
+						{
+							selectEndPos = (Console.CursorLeft, Console.CursorTop);
+
+							window.DrawLine(selectStartPos, selectEndPos, 'f');
+
+							selectStartPos = (0, 0);
+							selectEndPos = (0, 0);
+							mode = "";
+						}
+						else
+						{
+							mode = "select";
 						}
 						break;
 					default:

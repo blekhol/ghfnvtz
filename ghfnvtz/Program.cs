@@ -5,14 +5,16 @@
         static void Main(string[] args)
         {
             Window window = new Window();
-            window.Setup();
+			window.Setup();
 
-			string mode = "";
+            string mode = "";
 			int select = 0; //mennyiszer lett már selectelve
 			(int, int) selectStartPos = (0, 0);
 			(int, int) selectEndPos = (0, 0);
 
-			ConsoleKeyInfo key;
+			window.DrawRectangle((0, 0), (Console.WindowWidth - 1, 6), "\x1b[48;2;48;48;48m ");
+
+            ConsoleKeyInfo key;
             while (true)
             {
                 key = Console.ReadKey(true);

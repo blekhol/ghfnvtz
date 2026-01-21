@@ -12,7 +12,8 @@
 			(int, int) selectStartPos = (0, 0);
 			(int, int) selectEndPos = (0, 0);
 
-			window.DrawRectangle((0, 0), (Console.WindowWidth - 1, 6), "\x1b[48;2;48;48;48m ");
+            //window.DrawRectangle((0, 0), (Console.WindowWidth - 1, 6), "\x1b[48;2;48;48;48m ");
+            window.DrawRectangle((0, 0), (10, 10), 'S', true);
 
             ConsoleKeyInfo key;
             while (true)
@@ -187,7 +188,7 @@
 							selectEndPos = (Console.CursorLeft, Console.CursorTop);
 							window.DrawAtPos((Console.CursorLeft, Console.CursorTop), 'c');
 
-							window.DrawRectangle(selectStartPos, selectEndPos, 'P');
+							//window.DrawRectangle(selectStartPos, selectEndPos, 'P');
 
 							selectStartPos = (0, 0);
 							selectEndPos = (0, 0);
@@ -199,7 +200,10 @@
 							mode = "select";
 						}
 						break;
-					default:
+					case ConsoleKey.Escape:
+                        window.DrawRectangle((Console.CursorLeft, Console.CursorTop), (Console.CursorLeft + 10, Console.CursorTop + 10), 'S', true);
+						break;
+                    default:
                         break;
                 }
             }

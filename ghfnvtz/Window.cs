@@ -36,21 +36,29 @@ namespace ghfnvtz
 			{ 'x', "\x1b[48;2;204;204;204m " },
 			{ 'X', "\x1b[48;2;105;105;105m " },
 		};
+		
+		string[] windowState;
 
-
-		public Window()
+        public Window()
 		{
 		}
 
         public void Setup()
         {
-            Console.BackgroundColor = ConsoleColor.DarkGray;
-
 			WindowSetup.SetFont(8, 8);
             WindowSetup.EnableTrueColor();
 
             Console.SetBufferSize(Console.LargestWindowWidth, Console.LargestWindowHeight);
             Console.SetWindowSize(Console.LargestWindowWidth, Console.LargestWindowHeight);
+
+			windowState = new string[Console.LargestWindowWidth * Console.WindowHeight];
+
+            for (int i = 0; i < windowState.Length; i++)
+            {
+				windowState[i] = "\x1b[48;2;0;0;0m ";
+            }
+
+			Console.Write(string.Join("", windowState));
         }
 
 
@@ -60,8 +68,9 @@ namespace ghfnvtz
 			Console.SetCursorPosition(pos.x, pos.y);
 
 			Console.Write(colors[colorCode]);
+			windowState[pos.y * Console.WindowWidth + pos.x] = colors[colorCode];
 
-			Console.SetCursorPosition(pos.x, pos.y);
+            Console.SetCursorPosition(pos.x, pos.y);
 		}
 
         public void DrawAtPos((int x, int y) pos, string trueColorString)
@@ -69,6 +78,7 @@ namespace ghfnvtz
             Console.SetCursorPosition(pos.x, pos.y);
 
             Console.Write(trueColorString);
+            windowState[pos.y * Console.WindowWidth + pos.x] = trueColorString;
 
             Console.SetCursorPosition(pos.x, pos.y);
         }
@@ -173,12 +183,33 @@ namespace ghfnvtz
             }
         }
 
-        public void DrawRectangle((int x, int y) start, (int x, int y) end, char colorCode)
+        public void DrawRectangle((int x, int y) start, (int x, int y) end, char colorCode, bool fill)
 		{
-			DrawLine(start, (end.x, start.y), colorCode);
-			DrawLine((start.x, end.y), end, colorCode);
-			DrawLine(start, (start.x, end.y), colorCode);
-			DrawLine((end.x, start.y), end, colorCode);
+			if (fill)
+			{
+				string filledRect = "";
+				for (int y = start.y; y <= end.y; y++)
+				{
+					for (int x = start.x; x <= end.x; x++)
+					{
+						filledRect += colors[colorCode];
+                    }
+					if (y != end.y)
+					{
+                        filledRect += "\n";
+                    }
+                }
+				
+				Console.SetCursorPosition(start.x, start.y);
+				Console.Write(filledRect);
+            }
+			else
+			{
+                DrawLine(start, (end.x, start.y), colorCode);
+                DrawLine((start.x, end.y), end, colorCode);
+                DrawLine(start, (start.x, end.y), colorCode);
+                DrawLine((end.x, start.y), end, colorCode);
+            }
 		}
 
         public void DrawRectangle((int x, int y) start, (int x, int y) end, string trueColorString)

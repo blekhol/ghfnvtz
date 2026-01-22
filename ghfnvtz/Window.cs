@@ -188,11 +188,30 @@ namespace ghfnvtz
 			if (fill)
 			{
 				string filledRect = "";
+
+				if (start.y > end.y)
+				{
+					int seged = start.y;
+					start.y = end.y;
+					end.y = seged;
+				}
+				if (start.x > end.x)
+				{
+					int seged = start.x;
+					start.x = end.x;
+					end.x = seged;
+				}
+
 				for (int y = start.y; y <= end.y; y++)
 				{
+					if (y != start.y)
+					{
+						filledRect += string.Join("", windowState.Skip(y * Console.WindowWidth).Take(start.x));
+					}
 					for (int x = start.x; x <= end.x; x++)
 					{
 						filledRect += colors[colorCode];
+						windowState[y * Console.WindowWidth + x] = colors[colorCode];
                     }
 					if (y != end.y)
 					{
@@ -212,12 +231,52 @@ namespace ghfnvtz
             }
 		}
 
-        public void DrawRectangle((int x, int y) start, (int x, int y) end, string trueColorString)
+        public void DrawRectangle((int x, int y) start, (int x, int y) end, string trueColorString, bool fill)
         {
-            DrawLine(start, (end.x, start.y), trueColorString);
-            DrawLine((start.x, end.y), end, trueColorString);
-            DrawLine(start, (start.x, end.y), trueColorString);
-            DrawLine((end.x, start.y), end, trueColorString);
+			if (fill)
+			{
+				string filledRect = "";
+
+				if (start.y > end.y)
+				{
+					int seged = start.y;
+					start.y = end.y;
+					end.y = seged;
+				}
+				if (start.x > end.x)
+				{
+					int seged = start.x;
+					start.x = end.x;
+					end.x = seged;
+				}
+
+				for (int y = start.y; y <= end.y; y++)
+				{
+					if (y != start.y)
+					{
+						filledRect += string.Join("", windowState.Skip(y * Console.WindowWidth).Take(start.x));
+					}
+					for (int x = start.x; x <= end.x; x++)
+					{
+						filledRect += trueColorString;
+						windowState[y * Console.WindowWidth + x] = trueColorString;
+					}
+					if (y != end.y)
+					{
+						filledRect += "\n";
+					}
+				}
+
+				Console.SetCursorPosition(start.x, start.y);
+				Console.Write(filledRect);
+			}
+			else
+			{
+				DrawLine(start, (end.x, start.y), trueColorString);
+				DrawLine((start.x, end.y), end, trueColorString);
+				DrawLine(start, (start.x, end.y), trueColorString);
+				DrawLine((end.x, start.y), end, trueColorString);
+			}
         }
     }
 }

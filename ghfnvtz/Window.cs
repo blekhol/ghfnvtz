@@ -278,5 +278,39 @@ namespace ghfnvtz
 				DrawLine((end.x, start.y), end, trueColorString);
 			}
         }
+
+		public void DrawTriangle((int x, int y) a, (int x, int y) b, (int x, int y) c, char colorCode, bool fill)
+		{
+			if (fill)
+			{
+				List<(int x, int y)> ySorban = [a, b, c];
+				ySorban = ySorban.OrderBy(a => a.y).ToList();
+				List<(int x, int y)> xSorban = [a, b, c];
+				xSorban = xSorban.OrderBy(a => a.x).ToList();
+
+				(int x, int y) balNormalVektor = (xSorban[1].y - xSorban[0].y, (xSorban[1].x - xSorban[0].x) * -1);
+				(int x, int y) jobbNormalVektor = (xSorban[2].y - xSorban[1].y, (xSorban[2].x - xSorban[1].x) * -1);
+
+				for (int y = ySorban[0].y; y < ySorban[2].y; y++)
+				{
+					int elX1;
+					int elX2;
+
+					for (int x = 0; x < Console.WindowWidth; x++)
+					{
+						if (balNormalVektor.x + balNormalVektor.y == balNormalVektor.x * x + balNormalVektor.y * y)
+						{
+							DrawAtPos((x, y), 'P');
+						}
+					}
+				}
+			}
+			else
+			{
+				DrawLine(a, b, colorCode);
+				DrawLine(a, c, colorCode);
+				DrawLine(b, c, colorCode);
+			}
+		}
     }
 }

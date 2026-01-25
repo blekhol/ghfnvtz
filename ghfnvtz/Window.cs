@@ -285,25 +285,26 @@ namespace ghfnvtz
 			{
 				List<(int x, int y)> ySorban = [a, b, c];
 				ySorban = ySorban.OrderBy(a => a.y).ToList();
-				List<(int x, int y)> xSorban = [a, b, c];
-				xSorban = xSorban.OrderBy(a => a.x).ToList();
 
-				(int x, int y) balNormalVektor = (xSorban[1].y - xSorban[0].y, (xSorban[1].x - xSorban[0].x) * -1);
-				(int x, int y) jobbNormalVektor = (xSorban[2].y - xSorban[1].y, (xSorban[2].x - xSorban[1].x) * -1);
+                //szélső oldalak normálvektorai
+                (int x, int y) nv1 = (ySorban[0].y - ySorban[1].y, (ySorban[0].x - ySorban[1].x) * -1);
+                (int x, int y) nv2 = (ySorban[0].y - ySorban[2].y, (ySorban[0].x - ySorban[2].x) * -1);
 
-				for (int y = ySorban[0].y; y < ySorban[2].y; y++)
+                for (int y = ySorban[0].y; y < ySorban[2].y; y++)
 				{
-					int elX1;
-					int elX2;
+					List<double> borderX = [];
+					borderX.Add(ySorban[1].x - (nv1.y - ySorban[1].y) / nv1.x);
+					borderX.Add(ySorban[2].x - (nv2.y - ySorban[2].y) / nv2.x);
+					borderX = borderX.OrderBy(x => x).ToList();
 
-					for (int x = 0; x < Console.WindowWidth; x++)
+					for (int x = 0; x <= Console.WindowWidth; x++)
 					{
-						if (balNormalVektor.x + balNormalVektor.y == balNormalVektor.x * x + balNormalVektor.y * y)
+						if (x >= borderX[0] && x <= borderX[1])
 						{
-							DrawAtPos((x, y), 'P');
-						}
-					}
-				}
+							DrawAtPos((x, y), colorCode);
+                        }
+                    }
+                }
 			}
 			else
 			{

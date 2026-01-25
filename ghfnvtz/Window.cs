@@ -286,20 +286,32 @@ namespace ghfnvtz
 				List<(int x, int y)> ySorban = [a, b, c];
 				ySorban = ySorban.OrderBy(a => a.y).ToList();
 
-                //szélső oldalak normálvektorai
+                //oldalak normálvektorai
+                //top-mid
+                //top-bot
+                //mid-bot
                 (int x, int y) nv1 = (ySorban[0].y - ySorban[1].y, (ySorban[0].x - ySorban[1].x) * -1);
                 (int x, int y) nv2 = (ySorban[0].y - ySorban[2].y, (ySorban[0].x - ySorban[2].x) * -1);
+				(int x, int y) nv3 = (ySorban[1].y - ySorban[2].y, (ySorban[1].x - ySorban[2].x) * -1);
 
                 for (int y = ySorban[0].y; y < ySorban[2].y; y++)
 				{
 					List<double> borderX = [];
-					borderX.Add(ySorban[1].x - (nv1.y - ySorban[1].y) / nv1.x);
-					borderX.Add(ySorban[2].x - (nv2.y - ySorban[2].y) / nv2.x);
-					borderX = borderX.OrderBy(x => x).ToList();
+                    
+					if (y <= ySorban[1].y)
+					{
+                        borderX.Add(ySorban[1].x - (nv1.y * y - nv1.y * ySorban[1].y) / nv1.x);
+                    }
+                    else
+                    {
+                        borderX.Add(ySorban[2].x - (nv3.y * y - nv3.y * ySorban[2].y) / nv3.x);
+                    }
+					borderX.Add(ySorban[2].x - (nv2.y * y - nv2.y * ySorban[2].y) / nv2.x);
+                    borderX = borderX.OrderBy(x => x).ToList();
 
 					for (int x = 0; x <= Console.WindowWidth; x++)
 					{
-						if (x >= borderX[0] && x <= borderX[1])
+						if (x >= Math.Ceiling(borderX[0]) && x <= Math.Floor(borderX[1]))
 						{
 							DrawAtPos((x, y), colorCode);
                         }

@@ -12,12 +12,9 @@
 			(int, int) selectStartPos = (0, 0);
 			(int, int) selectEndPos = (0, 0);
 
-			//window.DrawRectangle((0, 0), (Console.WindowWidth - 1, 6), "\x1b[48;2;48;48;48m ");
-			//window.DrawRectangle((0, 0), (10, 10), 'S', true);
-
 			Console.SetCursorPosition(100, 70);
 
-			window.DrawTriangle((35, 45), (10,20), (80, 50), 'P', true);
+			window.DrawTriangle((10, 10), (20, 30), (30, 10), 'M', true);
 
             ConsoleKeyInfo key;
             while (true)

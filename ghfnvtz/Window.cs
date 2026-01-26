@@ -297,14 +297,30 @@ namespace ghfnvtz
                 for (int y = ySorban[0].y; y < ySorban[2].y; y++)
 				{
 					List<double> borderX = [];
-                    
-					if (y <= ySorban[1].y)
+
+                    //ameddig a top-mid oldal érvényes
+                    if (y < ySorban[1].y)
 					{
-                        borderX.Add(ySorban[1].x - (nv1.y * y - nv1.y * ySorban[1].y) / nv1.x);
+						if (nv1.x == 0)
+						{
+							borderX.Add(ySorban[0].x);
+                        }
+						else
+						{
+                            borderX.Add(ySorban[1].x - (nv1.y * y - nv1.y * ySorban[1].y) / nv1.x);
+                        }
                     }
+					//mid-bot oldal
                     else
                     {
-                        borderX.Add(ySorban[2].x - (nv3.y * y - nv3.y * ySorban[2].y) / nv3.x);
+						if (nv3.x == 0)
+						{
+							borderX.Add(ySorban[1].x);
+						}
+						else
+						{
+                            borderX.Add(ySorban[2].x - (nv3.y * y - nv3.y * ySorban[2].y) / nv3.x);
+                        }
                     }
 					borderX.Add(ySorban[2].x - (nv2.y * y - nv2.y * ySorban[2].y) / nv2.x);
                     borderX = borderX.OrderBy(x => x).ToList();

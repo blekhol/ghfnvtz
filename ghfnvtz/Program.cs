@@ -14,7 +14,7 @@
 
 			Console.SetCursorPosition(100, 70);
 
-			window.DrawTriangle((10, 10), (20, 30), (30, 10), 'M', true);
+			window.DrawTriangle((10, 10), (12, 30), (30, 10), 'M', true);
 
             ConsoleKeyInfo key;
             while (true)

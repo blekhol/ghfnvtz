@@ -20,9 +20,59 @@
             window.WriteAtPos((2, Console.WindowHeight / 32), "Mód: 1. rajz / 2. alakzat / 3. segítség", "\x1b[38;2;255;255;255m");
             UpdateMode(currentMode);
             
+            //színek
+
+            Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
+            while (true)
+            {
+                var key = Console.ReadKey(true);
+                
+                switch (key.Key)
+                {
+                    #region Mód váltás
+                    case ConsoleKey.D1:
+                        UpdateMode("draw");
+                        break;
+                    case ConsoleKey.D2:
+                        UpdateMode("shape");
+                        break;
+                    case ConsoleKey.D3:
+                        UpdateMode("help");
+                        break;
+                    #endregion
+
+                    #region Cursor mozgás
+                    case ConsoleKey.UpArrow:
+                        if (Console.CursorTop - 1 > Console.WindowHeight / 16)
+                        {
+                            Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop - 1);
+                        }
+                        break;
+                    case ConsoleKey.DownArrow:
+                        if (Console.CursorTop + 1 != Console.WindowHeight)
+                        {
+                            Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop + 1);
+                        }
+                        break;
+                    case ConsoleKey.LeftArrow:
+                        if (Console.CursorLeft - 1 >= 0)
+                        {
+                            Console.SetCursorPosition(Console.CursorLeft - 1, Console.CursorTop);
+                        }
+                        break;
+                    case ConsoleKey.RightArrow:
+                        if (Console.CursorLeft + 1 != Console.WindowWidth)
+                        {
+                            Console.SetCursorPosition(Console.CursorLeft + 1, Console.CursorTop);
+                        }
+                        break;
+                    #endregion
 
 
-            Console.ReadKey();
+                    default:
+                        break;
+                }
+            }
         }
 
         static void UpdateMode(string mode)

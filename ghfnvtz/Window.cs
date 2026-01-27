@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
 
 namespace ghfnvtz
 {
@@ -12,32 +11,32 @@ namespace ghfnvtz
 	{
 		Dictionary<char, string> colors = new()
 		{
-			{ 'f', "\x1b[48;2;0;0;0m " },
-			{ 'F', "\x1b[48;2;255;255;255m " },
+			{ 'f', "\x1b[48;2;0;0;0m" },
+			{ 'F', "\x1b[48;2;255;255;255m" },
 
-			{ 'k', "\x1b[48;2;0;120;215m " },
-			{ 'K', "\x1b[48;2;0;0;128m " },
+			{ 'k', "\x1b[48;2;0;120;215m" },
+			{ 'K', "\x1b[48;2;0;0;128m" },
 
-			{ 'z', "\x1b[48;2;16;124;16m " },
-			{ 'Z', "\x1b[48;2;0;100;0m " },
+			{ 'z', "\x1b[48;2;16;124;16m" },
+			{ 'Z', "\x1b[48;2;0;100;0m" },
 
-			{ 'c', "\x1b[48;2;58;150;221m " },
-			{ 'C', "\x1b[48;2;0;139;139m " },
+			{ 'c', "\x1b[48;2;58;150;221m" },
+			{ 'C', "\x1b[48;2;0;139;139m" },
 
-			{ 'p', "\x1b[48;2;231;72;86m " },
-			{ 'P', "\x1b[48;2;139;0;0m " },
+			{ 'p', "\x1b[48;2;231;72;86m" },
+			{ 'P', "\x1b[48;2;139;0;0m" },
 
-			{ 'm', "\x1b[48;2;180;0;158m " },
-			{ 'M', "\x1b[48;2;139;0;139m " },
+			{ 'm', "\x1b[48;2;180;0;158m" },
+			{ 'M', "\x1b[48;2;139;0;139m" },
 
-			{ 's', "\x1b[48;2;249;241;165m " },
-			{ 'S', "\x1b[48;2;184;134;11m " },
+			{ 's', "\x1b[48;2;249;241;165m" },
+			{ 'S', "\x1b[48;2;184;134;11m" },
 
-			{ 'x', "\x1b[48;2;204;204;204m " },
-			{ 'X', "\x1b[48;2;105;105;105m " },
+			{ 'x', "\x1b[48;2;204;204;204m" },
+			{ 'X', "\x1b[48;2;105;105;105m" },
 		};
 		
-		string[] windowState;
+		Pixel[] windowState;
 
         public Window()
 		{
@@ -51,16 +50,14 @@ namespace ghfnvtz
             Console.SetBufferSize(Console.LargestWindowWidth, Console.LargestWindowHeight);
             Console.SetWindowSize(Console.LargestWindowWidth, Console.LargestWindowHeight);
 
-			windowState = new string[Console.LargestWindowWidth * Console.WindowHeight];
+			windowState = new Pixel[Console.LargestWindowWidth * Console.WindowHeight];
 
             for (int i = 0; i < windowState.Length; i++)
             {
-				windowState[i] = "\x1b[48;2;18;18;18m ";
+				windowState[i] = new Pixel("\x1b[48;2;18;18;18m", "\x1b[38;2;255;255;255m", ' ');
+				Console.Write(windowState[i].ToString());
             }
-
-			Console.Write(string.Join("", windowState));
         }
-
 
 
         public void DrawAtPos((int x, int y) pos, char colorCode)
@@ -68,7 +65,7 @@ namespace ghfnvtz
 			Console.SetCursorPosition(pos.x, pos.y);
 
 			Console.Write(colors[colorCode]);
-			windowState[pos.y * Console.WindowWidth + pos.x] = colors[colorCode];
+			windowState[pos.y * Console.WindowWidth + pos.x].BackgroundColor = colors[colorCode];
 
             Console.SetCursorPosition(pos.x, pos.y);
 		}
@@ -78,7 +75,7 @@ namespace ghfnvtz
             Console.SetCursorPosition(pos.x, pos.y);
 
             Console.Write(trueColorString);
-            windowState[pos.y * Console.WindowWidth + pos.x] = trueColorString;
+            windowState[pos.y * Console.WindowWidth + pos.x].BackgroundColor = trueColorString;
 
             Console.SetCursorPosition(pos.x, pos.y);
         }
@@ -184,102 +181,42 @@ namespace ghfnvtz
         }
 
         public void DrawRectangle((int x, int y) start, (int x, int y) end, char colorCode, bool fill)
-		{
-			if (fill)
-			{
-				string filledRect = "";
-
-				if (start.y > end.y)
-				{
-					int seged = start.y;
-					start.y = end.y;
-					end.y = seged;
-				}
-				if (start.x > end.x)
-				{
-					int seged = start.x;
-					start.x = end.x;
-					end.x = seged;
-				}
-
-				for (int y = start.y; y <= end.y; y++)
-				{
-					if (y != start.y)
-					{
-						filledRect += string.Join("", windowState.Skip(y * Console.WindowWidth).Take(start.x));
-					}
-					for (int x = start.x; x <= end.x; x++)
-					{
-						filledRect += colors[colorCode];
-						windowState[y * Console.WindowWidth + x] = colors[colorCode];
-                    }
-					if (y != end.y)
-					{
-                        filledRect += "\n";
-                    }
+        {
+            if (fill)
+            {
+                for (int y = start.y; y <= end.y; y++)
+                {
+                    DrawLine((start.x, y), (end.x, y), colorCode);
                 }
-				
-				Console.SetCursorPosition(start.x, start.y);
-				Console.Write(filledRect);
             }
-			else
-			{
+            else
+            {
                 DrawLine(start, (end.x, start.y), colorCode);
                 DrawLine((start.x, end.y), end, colorCode);
                 DrawLine(start, (start.x, end.y), colorCode);
                 DrawLine((end.x, start.y), end, colorCode);
             }
-		}
+        }
 
         public void DrawRectangle((int x, int y) start, (int x, int y) end, string trueColorString, bool fill)
         {
-			if (fill)
-			{
-				string filledRect = "";
-
-				if (start.y > end.y)
-				{
-					int seged = start.y;
-					start.y = end.y;
-					end.y = seged;
-				}
-				if (start.x > end.x)
-				{
-					int seged = start.x;
-					start.x = end.x;
-					end.x = seged;
-				}
-
-				for (int y = start.y; y <= end.y; y++)
-				{
-					if (y != start.y)
-					{
-						filledRect += string.Join("", windowState.Skip(y * Console.WindowWidth).Take(start.x));
-					}
-					for (int x = start.x; x <= end.x; x++)
-					{
-						filledRect += trueColorString;
-						windowState[y * Console.WindowWidth + x] = trueColorString;
-					}
-					if (y != end.y)
-					{
-						filledRect += "\n";
-					}
-				}
-
-				Console.SetCursorPosition(start.x, start.y);
-				Console.Write(filledRect);
-			}
-			else
-			{
-				DrawLine(start, (end.x, start.y), trueColorString);
-				DrawLine((start.x, end.y), end, trueColorString);
-				DrawLine(start, (start.x, end.y), trueColorString);
-				DrawLine((end.x, start.y), end, trueColorString);
-			}
+            if (fill)
+            {
+                for (int y = start.y; y <= end.y; y++)
+                {
+                    DrawLine((start.x, y), (end.x, y), trueColorString);
+                }
+            }
+            else
+            {
+                DrawLine(start, (end.x, start.y), trueColorString);
+                DrawLine((start.x, end.y), end, trueColorString);
+                DrawLine(start, (start.x, end.y), trueColorString);
+                DrawLine((end.x, start.y), end, trueColorString);
+            }
         }
 
-		public void DrawTriangle((int x, int y) a, (int x, int y) b, (int x, int y) c, char colorCode, bool fill)
+        public void DrawTriangle((int x, int y) a, (int x, int y) b, (int x, int y) c, char colorCode, bool fill)
 		{
 			if (fill)
 			{
@@ -330,7 +267,6 @@ namespace ghfnvtz
 						if (x >= Math.Ceiling(borderX[0]) && x <= Math.Floor(borderX[1]))
 						{
 							DrawAtPos((x, y), colorCode);
-							windowState[y * Console.WindowWidth + x] = colors[colorCode];
                         }
                     }
                 }
@@ -394,7 +330,6 @@ namespace ghfnvtz
                         if (x >= Math.Ceiling(borderX[0]) && x <= Math.Floor(borderX[1]))
                         {
                             DrawAtPos((x, y), trueColorString);
-							windowState[y * Console.WindowWidth + x] = trueColorString;
                         }
                     }
                 }
@@ -436,5 +371,35 @@ namespace ghfnvtz
                 }
 			}
 		}
+
+        public void DrawCircle((int x, int y) center, int radius, string trueColorString, bool fill)
+        {
+            if (fill)
+            {
+                for (int y = center.y - radius; y < center.y + radius + 1; y++)
+                {
+                    for (int x = center.x - radius; x < center.x + radius + 1; x++)
+                    {
+                        if (Math.Pow(x - center.x, 2) + Math.Pow(y - center.y, 2) <= Math.Pow(radius, 2) + radius)
+                        {
+                            DrawAtPos((x, y), trueColorString);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                for (int y = center.y - radius; y < center.y + radius + 1; y++)
+                {
+                    for (int x = center.x - radius; x < center.x + radius + 1; x++)
+                    {
+                        if (Math.Abs(Math.Pow(x - center.x, 2) + Math.Pow(y - center.y, 2) - Math.Pow(radius, 2)) <= radius)
+                        {
+                            DrawAtPos((x, y), trueColorString);
+                        }
+                    }
+                }
+            }
+        }
     }
 }

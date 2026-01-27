@@ -12,42 +12,9 @@ namespace ghfnvtz
         {
 			window.Setup();
 
-            int select = 0; //mennyiszer lett már selectelve
-			(int, int) selectStartPos = (0, 0);
-			(int, int) selectEndPos = (0, 0);
+            RajzoloSetup();
 
-            //UI
-            //mode jelzp
-            window.DrawRectangle((0, 0), (Console.WindowWidth - 1, Console.WindowHeight / 16), "\x1b[48;2;30;30;30m", true);
-            window.DrawRectangle((0, 0), (Console.WindowWidth - 1, Console.WindowHeight / 16), "\x1b[48;2;35;52;83m", false);
-            window.WriteAtPos((2, Console.WindowHeight / 32), "Mód: 1. rajz / 2. alakzat / 3. segítség", "\x1b[38;2;255;255;255m");
-            UpdateMode(currentMode);
-
-            //színek
-            string szinekSor1 = "";
-            string szinekSor2 = "";
-            string szinekText = "Színek: ";
-
-            //szín paletta háttér
-            window.DrawRectangle((Console.WindowWidth / 2 - 8, 1), (Console.WindowWidth / 2 + 8, 7), "\x1b[48;2;30;30;30m", true);
-            //kiválasztott szín keret
-            UpdateSelectedColor(selectedColor);
-
-            for (int x = 0; x < 8; x++)
-            {
-                window.DrawAtPos(((Console.WindowWidth / 2 - 7) + x * 2, 2), window.colors.ElementAt(x).Value);
-                window.WriteAtPos(((Console.WindowWidth / 2 - 7) + x * 2, 3), window.colors.ElementAt(x).Key.ToString(), "\x1b[38;2;255;255;255m");
-            }
-            for (int x = 0; x < 8; x++)
-            {
-                window.DrawAtPos(((Console.WindowWidth / 2 - 7) + x * 2, 5), window.colors.ElementAt(x+8).Value);
-                window.WriteAtPos(((Console.WindowWidth / 2 - 7) + x * 2, 6), window.colors.ElementAt(x+8).Key.ToString(), "\x1b[38;2;255;255;255m");
-            }
-
-            //window.WriteAtPos((Console.WindowWidth / 2 - szinekText.Length, Console.WindowHeight / 32), "Színek: ", "\x1b[38;2;255;255;255m");
-
-            Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 32);
-            //Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
+            Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
 
             while (true)
             {
@@ -201,14 +168,52 @@ namespace ghfnvtz
                         break;
                     #endregion
 
-                    //átmeneti
                     case ConsoleKey.Spacebar:
+                        if (currentMode == "draw")
+                        {
+                            window.DrawAtPos((Console.CursorLeft, Console.CursorTop), selectedColor);
+                        }
+                        break;
+
+                    //átmeneti
+                    case ConsoleKey.Enter:
                         Trace.WriteLine($"Cursor pos: {Console.GetCursorPosition()}");
                         break;
 
                     default:
                         break;
                 }
+            }
+        }
+
+        static void RajzoloSetup()
+        {
+            //UI
+            //mode jelzp
+            window.DrawRectangle((0, 0), (Console.WindowWidth - 1, Console.WindowHeight / 16), "\x1b[48;2;30;30;30m", true);
+            window.DrawRectangle((0, 0), (Console.WindowWidth - 1, Console.WindowHeight / 16), "\x1b[48;2;35;52;83m", false);
+            window.WriteAtPos((2, Console.WindowHeight / 32), "Mód: 1. rajz / 2. alakzat / 3. segítség", "\x1b[38;2;255;255;255m");
+            UpdateMode(currentMode);
+
+            //színek
+            string szinekSor1 = "";
+            string szinekSor2 = "";
+            string szinekText = "Színek: ";
+
+            //szín paletta háttér
+            window.DrawRectangle((Console.WindowWidth / 2 - 8, 1), (Console.WindowWidth / 2 + 8, 7), "\x1b[48;2;30;30;30m", true);
+            //kiválasztott szín keret
+            UpdateSelectedColor(selectedColor);
+
+            for (int x = 0; x < 8; x++)
+            {
+                window.DrawAtPos(((Console.WindowWidth / 2 - 7) + x * 2, 2), window.colors.ElementAt(x).Value);
+                window.WriteAtPos(((Console.WindowWidth / 2 - 7) + x * 2, 3), window.colors.ElementAt(x).Key.ToString(), "\x1b[38;2;255;255;255m");
+            }
+            for (int x = 0; x < 8; x++)
+            {
+                window.DrawAtPos(((Console.WindowWidth / 2 - 7) + x * 2, 5), window.colors.ElementAt(x + 8).Value);
+                window.WriteAtPos(((Console.WindowWidth / 2 - 7) + x * 2, 6), window.colors.ElementAt(x + 8).Key.ToString(), "\x1b[38;2;255;255;255m");
             }
         }
 

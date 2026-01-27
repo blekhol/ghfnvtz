@@ -59,6 +59,17 @@ namespace ghfnvtz
             }
         }
 
+        public void WriteAtPos((int x, int y) pos, string text, string foregroundColor)
+        {
+            Console.SetCursorPosition(pos.x, pos.y);
+            Console.Write(foregroundColor + text + "\x1b[0m");
+            for (int i = 0; i < text.Length; i++)
+            {
+                windowState[pos.y * Console.WindowWidth + pos.x + i].ForegroundColor = foregroundColor;
+                windowState[pos.y * Console.WindowWidth + pos.x + i].Character = text[i];
+            }
+            Console.SetCursorPosition(pos.x, pos.y);
+        }
 
         public void DrawAtPos((int x, int y) pos, char colorCode)
 		{

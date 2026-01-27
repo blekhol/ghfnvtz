@@ -21,10 +21,9 @@
             UpdateMode(currentMode);
             
             //színek
+            window.DrawTriangle((100, 70), (100, 70), (100, 70), "\x1b[48;2;255;0;0m", false);
 
             Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
-
-            window.DrawRectangle((100, 70), (20, 25), 'K', true);
 
             while (true)
             {

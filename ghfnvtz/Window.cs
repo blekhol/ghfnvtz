@@ -238,69 +238,6 @@ namespace ghfnvtz
         }
 
         public void DrawTriangle((int x, int y) a, (int x, int y) b, (int x, int y) c, char colorCode, bool fill)
-		{
-			if (fill)
-			{
-				List<(int x, int y)> ySorban = [a, b, c];
-				ySorban = ySorban.OrderBy(a => a.y).ToList();
-
-                //oldalak normálvektorai
-                //top-mid
-                //top-bot
-                //mid-bot
-                (int x, int y) nv1 = (ySorban[0].y - ySorban[1].y, (ySorban[0].x - ySorban[1].x) * -1);
-                (int x, int y) nv2 = (ySorban[0].y - ySorban[2].y, (ySorban[0].x - ySorban[2].x) * -1);
-				(int x, int y) nv3 = (ySorban[1].y - ySorban[2].y, (ySorban[1].x - ySorban[2].x) * -1);
-
-                for (int y = ySorban[0].y; y < ySorban[2].y; y++)
-				{
-					List<double> borderX = [];
-
-                    //ameddig a top-mid oldal érvényes
-                    if (y < ySorban[1].y)
-					{
-						if (nv1.x == 0)
-						{
-							borderX.Add(ySorban[0].x);
-                        }
-						else
-						{
-                            borderX.Add(ySorban[1].x - (nv1.y * y - nv1.y * ySorban[1].y) / nv1.x);
-                        }
-                    }
-					//mid-bot oldal
-                    else
-                    {
-						if (nv3.x == 0)
-						{
-							borderX.Add(ySorban[1].x);
-						}
-						else
-						{
-                            borderX.Add(ySorban[2].x - (nv3.y * y - nv3.y * ySorban[2].y) / nv3.x);
-                        }
-                    }
-					borderX.Add(ySorban[2].x - (nv2.y * y - nv2.y * ySorban[2].y) / nv2.x);
-                    borderX = borderX.OrderBy(x => x).ToList();
-
-					for (int x = 0; x <= Console.WindowWidth; x++)
-					{
-						if (x >= Math.Ceiling(borderX[0]) && x <= Math.Floor(borderX[1]))
-						{
-							DrawAtPos((x, y), colorCode);
-                        }
-                    }
-                }
-			}
-			else
-			{
-				DrawLine(a, b, colorCode);
-				DrawLine(a, c, colorCode);
-				DrawLine(b, c, colorCode);
-			}
-		}
-
-        public void DrawTriangle((int x, int y) a, (int x, int y) b, (int x, int y) c, string trueColorString, bool fill)
         {
             if (fill)
             {
@@ -315,7 +252,7 @@ namespace ghfnvtz
                 (int x, int y) nv2 = (ySorban[0].y - ySorban[2].y, (ySorban[0].x - ySorban[2].x) * -1);
                 (int x, int y) nv3 = (ySorban[1].y - ySorban[2].y, (ySorban[1].x - ySorban[2].x) * -1);
 
-                for (int y = ySorban[0].y; y < ySorban[2].y; y++)
+                for (int y = ySorban[0].y; y <= ySorban[2].y; y++)
                 {
                     List<double> borderX = [];
 
@@ -343,7 +280,84 @@ namespace ghfnvtz
                             borderX.Add(ySorban[2].x - (nv3.y * y - nv3.y * ySorban[2].y) / nv3.x);
                         }
                     }
-                    borderX.Add(ySorban[2].x - (nv2.y * y - nv2.y * ySorban[2].y) / nv2.x);
+                    if (nv2.x == 0)
+                    {
+                        borderX.Add(ySorban[2].x);
+                    }
+                    else
+                    {
+                        borderX.Add(ySorban[2].x - (nv2.y * y - nv2.y * ySorban[2].y) / nv2.x);
+                    }
+                    borderX = borderX.OrderBy(x => x).ToList();
+
+                    for (int x = 0; x <= Console.WindowWidth; x++)
+                    {
+                        if (x >= Math.Ceiling(borderX[0]) && x <= Math.Floor(borderX[1]))
+                        {
+                            DrawAtPos((x, y), colorCode);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                DrawLine(a, b, colorCode);
+                DrawLine(a, c, colorCode);
+                DrawLine(b, c, colorCode);
+            }
+        }
+
+        public void DrawTriangle((int x, int y) a, (int x, int y) b, (int x, int y) c, string trueColorString, bool fill)
+        {
+            if (fill)
+            {
+                List<(int x, int y)> ySorban = [a, b, c];
+                ySorban = ySorban.OrderBy(a => a.y).ToList();
+
+                //oldalak normálvektorai
+                //top-mid
+                //top-bot
+                //mid-bot
+                (int x, int y) nv1 = (ySorban[0].y - ySorban[1].y, (ySorban[0].x - ySorban[1].x) * -1);
+                (int x, int y) nv2 = (ySorban[0].y - ySorban[2].y, (ySorban[0].x - ySorban[2].x) * -1);
+                (int x, int y) nv3 = (ySorban[1].y - ySorban[2].y, (ySorban[1].x - ySorban[2].x) * -1);
+
+                for (int y = ySorban[0].y; y <= ySorban[2].y; y++)
+                {
+                    List<double> borderX = [];
+
+                    //ameddig a top-mid oldal érvényes
+                    if (y < ySorban[1].y)
+                    {
+                        if (nv1.x == 0)
+                        {
+                            borderX.Add(ySorban[0].x);
+                        }
+                        else
+                        {
+                            borderX.Add(ySorban[1].x - (nv1.y * y - nv1.y * ySorban[1].y) / nv1.x);
+                        }
+                    }
+                    //mid-bot oldal
+                    else
+                    {
+                        if (nv3.x == 0)
+                        {
+                            borderX.Add(ySorban[1].x);
+                        }
+                        else
+                        {
+                            borderX.Add(ySorban[2].x - (nv3.y * y - nv3.y * ySorban[2].y) / nv3.x);
+                        }
+                    }
+                    if (nv2.x == 0)
+                    {
+                        borderX.Add(ySorban[2].x);
+                    }
+                    else
+                    {
+                        borderX.Add(ySorban[2].x - (nv2.y * y - nv2.y * ySorban[2].y) / nv2.x);
+                    }
                     borderX = borderX.OrderBy(x => x).ToList();
 
                     for (int x = 0; x <= Console.WindowWidth; x++)

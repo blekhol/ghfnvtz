@@ -6,6 +6,7 @@ namespace ghfnvtz
     {
         static Window window = new Window();
         static string currentMode = "draw";
+        static string selectedColor = "\x1b[48;2;255;255;255m";
 
         static void Main(string[] args)
         {
@@ -17,13 +18,33 @@ namespace ghfnvtz
 
             //UI
             //mode jelzp
-            window.DrawRectangle((0, 0), (Console.WindowWidth - 1, Console.WindowHeight / 16), "\x1b[48;2;18;18;18m", true);
+            window.DrawRectangle((0, 0), (Console.WindowWidth - 1, Console.WindowHeight / 16), "\x1b[48;2;30;30;30m", true);
             window.DrawRectangle((0, 0), (Console.WindowWidth - 1, Console.WindowHeight / 16), "\x1b[48;2;35;52;83m", false);
             window.WriteAtPos((2, Console.WindowHeight / 32), "Mód: 1. rajz / 2. alakzat / 3. segítség", "\x1b[38;2;255;255;255m");
             UpdateMode(currentMode);
 
             //színek
-            window.WriteAtPos((Console.WindowWidth / 2 - "Színek: ".Length, Console.WindowHeight / 32), "Színek: ", "\x1b[38;2;255;255;255m");
+            string szinekSor1 = "";
+            string szinekSor2 = "";
+            string szinekText = "Színek: ";
+
+            //szín paletta háttér
+            window.DrawRectangle((Console.WindowWidth / 2 - 8, 1), (Console.WindowWidth / 2 + 8, 7), "\x1b[48;2;30;30;30m", true);
+            //kiválasztott szín keret
+            UpdateSelectedColor(selectedColor);
+
+            for (int x = 0; x < 8; x++)
+            {
+                window.DrawAtPos(((Console.WindowWidth / 2 - 7) + x * 2, 2), window.colors.ElementAt(x).Value);
+                window.WriteAtPos(((Console.WindowWidth / 2 - 7) + x * 2, 3), window.colors.ElementAt(x).Key.ToString(), "\x1b[38;2;255;255;255m");
+            }
+            for (int x = 0; x < 8; x++)
+            {
+                window.DrawAtPos(((Console.WindowWidth / 2 - 7) + x * 2, 5), window.colors.ElementAt(x+8).Value);
+                window.WriteAtPos(((Console.WindowWidth / 2 - 7) + x * 2, 6), window.colors.ElementAt(x+8).Key.ToString(), "\x1b[38;2;255;255;255m");
+            }
+
+            //window.WriteAtPos((Console.WindowWidth / 2 - szinekText.Length, Console.WindowHeight / 32), "Színek: ", "\x1b[38;2;255;255;255m");
 
             Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 32);
             //Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
@@ -73,6 +94,113 @@ namespace ghfnvtz
                         break;
                     #endregion
 
+                    #region Szín kiválasztás
+                    case ConsoleKey.F:
+                        if (currentMode == "draw")
+                        {
+                            if (key.Modifiers.HasFlag(ConsoleModifiers.Shift))
+                            {
+                                UpdateSelectedColor(window.colors['F']);
+                            }
+                            else
+                            {
+                                UpdateSelectedColor(window.colors['f']);
+                            }
+                        }
+                        break;
+                    case ConsoleKey.K:
+                        if (currentMode == "draw")
+                        {
+                            if (key.Modifiers.HasFlag(ConsoleModifiers.Shift))
+                            {
+                                UpdateSelectedColor(window.colors['K']);
+                            }
+                            else
+                            {
+                                UpdateSelectedColor(window.colors['k']);
+                            }
+                        }
+                        break;
+                    case ConsoleKey.Z:
+                        if (currentMode == "draw")
+                        {
+                            if (key.Modifiers.HasFlag(ConsoleModifiers.Shift))
+                            {
+                                UpdateSelectedColor(window.colors['Z']);
+                            }
+                            else
+                            {
+                                UpdateSelectedColor(window.colors['z']);
+                            }
+                        }
+                        break;
+                    case ConsoleKey.C:
+                        if (currentMode == "draw")
+                        {
+                            if (key.Modifiers.HasFlag(ConsoleModifiers.Shift))
+                            {
+                                UpdateSelectedColor(window.colors['C']);
+                            }
+                            else
+                            {
+                                UpdateSelectedColor(window.colors['c']);
+                            }
+                        }
+                        break;
+                    case ConsoleKey.P:
+                        if (currentMode == "draw")
+                        {
+                            if (key.Modifiers.HasFlag(ConsoleModifiers.Shift))
+                            {
+                                UpdateSelectedColor(window.colors['P']);
+                            }
+                            else
+                            {
+                                UpdateSelectedColor(window.colors['p']);
+                            }
+                        }
+                        break;
+                    case ConsoleKey.M:
+                        if (currentMode == "draw")
+                        {
+                            if (key.Modifiers.HasFlag(ConsoleModifiers.Shift))
+                            {
+                                UpdateSelectedColor(window.colors['M']);
+                            }
+                            else
+                            {
+                                UpdateSelectedColor(window.colors['m']);
+                            }
+                        }
+                        break;
+                    case ConsoleKey.S:
+                        if (currentMode == "draw")
+                        {
+                            if (key.Modifiers.HasFlag(ConsoleModifiers.Shift))
+                            {
+                                UpdateSelectedColor(window.colors['S']);
+                            }
+                            else
+                            {
+                                UpdateSelectedColor(window.colors['s']);
+                            }
+                        }
+                        break;
+                    case ConsoleKey.X:
+                        if (currentMode == "draw")
+                        {
+                            if (key.Modifiers.HasFlag(ConsoleModifiers.Shift))
+                            {
+                                UpdateSelectedColor(window.colors['X']);
+                            }
+                            else
+                            {
+                                UpdateSelectedColor(window.colors['x']);
+                            }
+                        }
+                        break;
+                    #endregion
+
                     //átmeneti
                     case ConsoleKey.Spacebar:
                         Trace.WriteLine($"Cursor pos: {Console.GetCursorPosition()}");
@@ -110,6 +238,14 @@ namespace ghfnvtz
                 default:
                     break;
             }
+            Console.SetCursorPosition(pos.Item1, pos.Item2);
+        }
+
+        static void UpdateSelectedColor(string color)
+        {
+            (int, int) pos = Console.GetCursorPosition();
+            window.DrawRectangle((Console.WindowWidth / 2 - 13, 3), (Console.WindowWidth / 2 - 11, 5), color, true);
+            selectedColor = color;
             Console.SetCursorPosition(pos.Item1, pos.Item2);
         }
     }

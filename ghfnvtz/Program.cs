@@ -17,15 +17,11 @@
             //mode jelzp
             window.DrawRectangle((0, 0), (Console.WindowWidth - 1, Console.WindowHeight / 16), "\x1b[48;2;11;11;11m ", true);
             window.DrawRectangle((0, 0), (Console.WindowWidth - 1, Console.WindowHeight / 16), "\x1b[48;2;35;52;83m \x1b[0m", false);
-            window.WriteAtPos((2, Console.WindowHeight / 32), "Mód: rajz / alakzat / segítség", "\x1b[38;2;255;255;255m");
+            window.WriteAtPos((2, Console.WindowHeight / 32), "Mód: 1. rajz / 2. alakzat / 3. segítség", "\x1b[38;2;255;255;255m");
             UpdateMode(currentMode);
+            
 
-            //
 
-            Console.ReadKey();
-            UpdateMode("shape");
-            Console.ReadKey();
-            UpdateMode("help");
             Console.ReadKey();
         }
 
@@ -34,21 +30,21 @@
             switch (mode)
             {
                 case "draw":
-                    window.WriteAtPos((7, Console.WindowHeight / 32), "rajz", "\x1b[38;2;220;0;0m");
-                    window.WriteAtPos((14, Console.WindowHeight / 32), "alakzat", "\x1b[38;2;255;255;255m");
-                    window.WriteAtPos((24, Console.WindowHeight / 32), "segítség", "\x1b[38;2;255;255;255m");
+                    window.WriteAtPos((7, Console.WindowHeight / 32), "1. rajz", "\x1b[38;2;220;0;0m");
+                    window.WriteAtPos((17, Console.WindowHeight / 32), "2. alakzat", "\x1b[38;2;255;255;255m");
+                    window.WriteAtPos((30, Console.WindowHeight / 32), "3. segítség", "\x1b[38;2;255;255;255m");
                     currentMode = mode;
                     break;
                 case "shape":
-                    window.WriteAtPos((7, Console.WindowHeight / 32), "rajz", "\x1b[38;2;255;255;255m");
-                    window.WriteAtPos((14, Console.WindowHeight / 32), "alakzat", "\x1b[38;2;220;0;0m");
-                    window.WriteAtPos((24, Console.WindowHeight / 32), "segítség", "\x1b[38;2;255;255;255m");
+                    window.WriteAtPos((7, Console.WindowHeight / 32), "1. rajz", "\x1b[38;2;255;255;255m");
+                    window.WriteAtPos((17, Console.WindowHeight / 32), "2. alakzat", "\x1b[38;2;220;0;0m");
+                    window.WriteAtPos((30, Console.WindowHeight / 32), "3. segítség", "\x1b[38;2;255;255;255m");
                     currentMode = mode;
                     break;
                 case "help":
-                    window.WriteAtPos((7, Console.WindowHeight / 32), "rajz", "\x1b[38;2;255;255;255m");
-                    window.WriteAtPos((14, Console.WindowHeight / 32), "alakzat", "\x1b[38;2;255;255;255m");
-                    window.WriteAtPos((24, Console.WindowHeight / 32), "segítség", "\x1b[38;2;220;0;0m");
+                    window.WriteAtPos((7, Console.WindowHeight / 32), "1. rajz", "\x1b[38;2;255;255;255m");
+                    window.WriteAtPos((17, Console.WindowHeight / 32), "2. alakzat", "\x1b[38;2;255;255;255m");
+                    window.WriteAtPos((30, Console.WindowHeight / 32), "3. segítség", "\x1b[38;2;220;0;0m");
                     currentMode = mode;
                     break;
                 default:

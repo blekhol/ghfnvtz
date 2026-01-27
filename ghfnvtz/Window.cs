@@ -75,8 +75,8 @@ namespace ghfnvtz
 		{
 			Console.SetCursorPosition(pos.x, pos.y);
 
-			Console.Write(colors[colorCode]);
 			windowState[pos.y * Console.WindowWidth + pos.x].BackgroundColor = colors[colorCode];
+			Console.Write(windowState[pos.y * Console.WindowWidth + pos.x].ToString());
 
             Console.SetCursorPosition(pos.x, pos.y);
 		}
@@ -85,8 +85,8 @@ namespace ghfnvtz
         {
             Console.SetCursorPosition(pos.x, pos.y);
 
-            Console.Write(trueColorString);
             windowState[pos.y * Console.WindowWidth + pos.x].BackgroundColor = trueColorString;
+            Console.Write(windowState[pos.y * Console.WindowWidth + pos.x].ToString());
 
             Console.SetCursorPosition(pos.x, pos.y);
         }
@@ -193,11 +193,16 @@ namespace ghfnvtz
 
         public void DrawRectangle((int x, int y) start, (int x, int y) end, char colorCode, bool fill)
         {
+            List<(int x, int y)> ySorban = [start, end];
+            ySorban = ySorban.OrderBy(a => a.y).ToList();
+            List<(int x, int y)> xSorban = [start, end];
+            xSorban = xSorban.OrderBy(a => a.x).ToList();
+
             if (fill)
             {
-                for (int y = start.y; y <= end.y; y++)
+                for (int y = ySorban[0].y; y <= ySorban[1].y; y++)
                 {
-                    DrawLine((start.x, y), (end.x, y), colorCode);
+                    DrawLine((xSorban[0].x, y), (xSorban[1].x, y), colorCode);
                 }
             }
             else
@@ -211,11 +216,16 @@ namespace ghfnvtz
 
         public void DrawRectangle((int x, int y) start, (int x, int y) end, string trueColorString, bool fill)
         {
+            List<(int x, int y)> ySorban = [start, end];
+            ySorban = ySorban.OrderBy(a => a.y).ToList();
+            List<(int x, int y)> xSorban = [start, end];
+            xSorban = xSorban.OrderBy(a => a.x).ToList();
+
             if (fill)
             {
-                for (int y = start.y; y <= end.y; y++)
+                for (int y = ySorban[0].y; y <= ySorban[1].y; y++)
                 {
-                    DrawLine((start.x, y), (end.x, y), trueColorString);
+                    DrawLine((xSorban[0].x, y), (xSorban[1].x, y), trueColorString);
                 }
             }
             else

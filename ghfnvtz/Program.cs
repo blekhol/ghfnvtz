@@ -15,14 +15,17 @@
 
             //UI
             //mode jelzp
-            window.DrawRectangle((0, 0), (Console.WindowWidth - 1, Console.WindowHeight / 16), "\x1b[48;2;11;11;11m ", true);
-            window.DrawRectangle((0, 0), (Console.WindowWidth - 1, Console.WindowHeight / 16), "\x1b[48;2;35;52;83m \x1b[0m", false);
+            window.DrawRectangle((0, 0), (Console.WindowWidth - 1, Console.WindowHeight / 16), "\x1b[48;2;11;11;11m", true);
+            window.DrawRectangle((0, 0), (Console.WindowWidth - 1, Console.WindowHeight / 16), "\x1b[48;2;35;52;83m", false);
             window.WriteAtPos((2, Console.WindowHeight / 32), "Mód: 1. rajz / 2. alakzat / 3. segítség", "\x1b[38;2;255;255;255m");
             UpdateMode(currentMode);
             
             //színek
 
             Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
+
+            window.DrawRectangle((100, 70), (20, 25), 'K', true);
+
             while (true)
             {
                 var key = Console.ReadKey(true);
@@ -77,6 +80,7 @@
 
         static void UpdateMode(string mode)
         {
+            (int, int) pos = Console.GetCursorPosition();
             switch (mode)
             {
                 case "draw":
@@ -100,6 +104,7 @@
                 default:
                     break;
             }
+            Console.SetCursorPosition(pos.Item1, pos.Item2);
         }
     }
 }

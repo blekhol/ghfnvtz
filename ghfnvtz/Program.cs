@@ -7,6 +7,7 @@ namespace ghfnvtz
         static Window window = new Window();
         static string currentMode = "draw";
         static string selectedColor = "\x1b[48;2;255;255;255m";
+        static string selectedShape = "rectangle";
 
         static void Main(string[] args)
         {
@@ -196,10 +197,6 @@ namespace ghfnvtz
             UpdateMode(currentMode);
 
             //színek
-            string szinekSor1 = "";
-            string szinekSor2 = "";
-            string szinekText = "Színek: ";
-
             //szín paletta háttér
             window.DrawRectangle((Console.WindowWidth / 2 - 8, 1), (Console.WindowWidth / 2 + 8, 7), "\x1b[48;2;30;30;30m", true);
             //kiválasztott szín keret
@@ -209,12 +206,13 @@ namespace ghfnvtz
             {
                 window.DrawAtPos(((Console.WindowWidth / 2 - 7) + x * 2, 2), window.colors.ElementAt(x).Value);
                 window.WriteAtPos(((Console.WindowWidth / 2 - 7) + x * 2, 3), window.colors.ElementAt(x).Key.ToString(), "\x1b[38;2;255;255;255m");
-            }
-            for (int x = 0; x < 8; x++)
-            {
+
                 window.DrawAtPos(((Console.WindowWidth / 2 - 7) + x * 2, 5), window.colors.ElementAt(x + 8).Value);
                 window.WriteAtPos(((Console.WindowWidth / 2 - 7) + x * 2, 6), window.colors.ElementAt(x + 8).Key.ToString(), "\x1b[38;2;255;255;255m");
             }
+
+            //alakzatok
+
         }
 
         static void UpdateMode(string mode)

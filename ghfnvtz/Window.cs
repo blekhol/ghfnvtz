@@ -54,7 +54,7 @@ namespace ghfnvtz
 
             for (int i = 0; i < windowState.Length; i++)
             {
-				windowState[i] = new Pixel("\x1b[48;2;18;18;18m", "\x1b[38;2;255;255;255m", ' ');
+				windowState[i] = new Pixel("\x1b[48;2;28;28;28m", "\x1b[38;2;255;255;255m", ' ');
 				Console.Write(windowState[i].ToString());
             }
         }
@@ -62,11 +62,11 @@ namespace ghfnvtz
         public void WriteAtPos((int x, int y) pos, string text, string foregroundColor)
         {
             Console.SetCursorPosition(pos.x, pos.y);
-            Console.Write(foregroundColor + text + "\x1b[0m");
             for (int i = 0; i < text.Length; i++)
             {
                 windowState[pos.y * Console.WindowWidth + pos.x + i].ForegroundColor = foregroundColor;
                 windowState[pos.y * Console.WindowWidth + pos.x + i].Character = text[i];
+                Console.Write(windowState[pos.y * Console.WindowWidth + pos.x + i].ToString());
             }
             Console.SetCursorPosition(pos.x, pos.y);
         }

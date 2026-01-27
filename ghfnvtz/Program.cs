@@ -1,4 +1,6 @@
-﻿namespace ghfnvtz
+﻿using System.Diagnostics;
+
+namespace ghfnvtz
 {
     internal class Program
     {
@@ -15,15 +17,16 @@
 
             //UI
             //mode jelzp
-            window.DrawRectangle((0, 0), (Console.WindowWidth - 1, Console.WindowHeight / 16), "\x1b[48;2;11;11;11m", true);
+            window.DrawRectangle((0, 0), (Console.WindowWidth - 1, Console.WindowHeight / 16), "\x1b[48;2;18;18;18m", true);
             window.DrawRectangle((0, 0), (Console.WindowWidth - 1, Console.WindowHeight / 16), "\x1b[48;2;35;52;83m", false);
             window.WriteAtPos((2, Console.WindowHeight / 32), "Mód: 1. rajz / 2. alakzat / 3. segítség", "\x1b[38;2;255;255;255m");
             UpdateMode(currentMode);
-            
-            //színek
-            window.DrawTriangle((100, 70), (100, 70), (100, 70), "\x1b[48;2;255;0;0m", false);
 
-            Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
+            //színek
+            window.WriteAtPos((Console.WindowWidth / 2 - "Színek: ".Length, Console.WindowHeight / 32), "Színek: ", "\x1b[38;2;255;255;255m");
+
+            Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 32);
+            //Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
 
             while (true)
             {
@@ -45,7 +48,7 @@
 
                     #region Cursor mozgás
                     case ConsoleKey.UpArrow:
-                        if (Console.CursorTop - 1 > Console.WindowHeight / 16)
+                        if (Console.CursorTop - 1 >= /*Console.WindowHeight / 16 egyelőre kell hogy oda is menjen*/ 0)
                         {
                             Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop - 1);
                         }
@@ -70,6 +73,10 @@
                         break;
                     #endregion
 
+                    //átmeneti
+                    case ConsoleKey.Spacebar:
+                        Trace.WriteLine($"Cursor pos: {Console.GetCursorPosition()}");
+                        break;
 
                     default:
                         break;

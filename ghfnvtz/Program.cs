@@ -4,10 +4,13 @@ namespace ghfnvtz
 {
     internal class Program
     {
+        static Window helpWindow = new Window();
+
         static Window window = new Window();
         static string currentMode = "draw";
         static string selectedColor = "\x1b[48;2;255;255;255m";
         static string selectedShape = "rectangle";
+        static List<(int x, int y)> selectedShapePoints = new List<(int, int)>();
 
         static void Main(string[] args)
         {
@@ -169,12 +172,79 @@ namespace ghfnvtz
                         break;
                     #endregion
 
+                    #region alakzat váltás
+                    case ConsoleKey.D6:
+                        UpdateShape("line");
+                        break;
+                    case ConsoleKey.D7:
+                        UpdateShape("rectangle");
+                        break;
+                    case ConsoleKey.D8:
+                        UpdateShape("triangle");
+                        break;
+                    //case ConsoleKey.D9:
+                    //    UpdateShape("circle");
+                    //    break;
+                    #endregion
+
+                    #region alakzat rajzolás
                     case ConsoleKey.Spacebar:
                         if (currentMode == "draw")
                         {
                             window.DrawAtPos((Console.CursorLeft, Console.CursorTop), selectedColor);
                         }
+                        else if (currentMode == "shape")
+                        {
+                            //if (selectedShape == "circle")
+                            //{
+                            //    selectedShapePoints.Add((Console.CursorLeft, Console.CursorTop));
+
+                            //    Console.Write("sugár: ");
+                            //    int r = int.Parse(Console.ReadLine());
+                            //    window.DrawCircle(selectedShapePoints[0], r, selectedColor, key.Modifiers.HasFlag(ConsoleModifiers.Shift));
+                            //    Console.SetCursorPosition(selectedShapePoints[0].x, selectedShapePoints[0].y);
+                            //    window.WriteAtPos(selectedShapePoints[0], "       ", selectedColor);
+                            //}
+
+                            if (selectedShape == "line")
+                            {
+                                selectedShapePoints.Add((Console.CursorLeft, Console.CursorTop));
+                                window.DrawAtPos((Console.CursorLeft, Console.CursorTop), selectedColor);
+                                if (selectedShapePoints.Count == 2)
+                                {
+                                    window.DrawLine(selectedShapePoints[0], selectedShapePoints[1], selectedColor);
+                                    selectedShapePoints.Clear();
+                                }
+                            }
+                            else if (selectedShape == "rectangle")
+                            {
+                                selectedShapePoints.Add((Console.CursorLeft, Console.CursorTop));
+                                window.DrawAtPos((Console.CursorLeft, Console.CursorTop), selectedColor);
+                                if (selectedShapePoints.Count == 2)
+                                {
+                                    window.DrawRectangle(selectedShapePoints[0], selectedShapePoints[1], selectedColor, key.Modifiers.HasFlag(ConsoleModifiers.Shift));
+                                    selectedShapePoints.Clear();
+                                }
+                            }
+                            else if (selectedShape == "triangle")
+                            {
+                                selectedShapePoints.Add((Console.CursorLeft, Console.CursorTop));
+                                window.DrawAtPos((Console.CursorLeft, Console.CursorTop), selectedColor);
+                                if (selectedShapePoints.Count == 3)
+                                {
+                                    window.DrawTriangle(selectedShapePoints[0], selectedShapePoints[1], selectedShapePoints[2], selectedColor, key.Modifiers.HasFlag(ConsoleModifiers.Shift));
+                                    selectedShapePoints.Clear();
+                                }
+                            }
+                        }
                         break;
+                    case ConsoleKey.Backspace:
+                        if (currentMode == "shape")
+                        {
+                            selectedShapePoints.Clear();
+                        }
+                        break;
+                    #endregion
 
                     //átmeneti
                     case ConsoleKey.Enter:
@@ -215,12 +285,13 @@ namespace ghfnvtz
             string kivalasztottText = "Kiválaszott pontok: ";
             string alakzatText = "Alakzatok: 6. vonal / 7. téglalap / 8.háromszög / 9. kör";
 			window.WriteAtPos((Console.WindowWidth - 2 - alakzatText.Length, 4), alakzatText, "\x1b[38;2;255;255;255m");
-            UpdateShape("line");
+            UpdateShape(selectedShape);
 		}
 
         static void UpdateShape(string shape)
         {
 			(int, int) pos = Console.GetCursorPosition();
+            selectedShape = shape;
 
             switch (shape)
             {
@@ -229,16 +300,24 @@ namespace ghfnvtz
                     window.WriteAtPos((204, 4), "7. téglalap", "\x1b[38;2;255;255;255m");
                     window.WriteAtPos((218, 4), "8. háromszög", "\x1b[38;2;255;255;255m");
                     window.WriteAtPos((232, 4), "9. kör", "\x1b[38;2;255;255;255m");
-					selectedShape = shape;
                     break;
                 case "rectangle":
-                    selectedShape = shape;
+                    window.WriteAtPos((193, 4), "6. vonal", "\x1b[38;2;255;255;255m");
+                    window.WriteAtPos((204, 4), "7. téglalap", "\x1b[38;2;220;0;0m");
+                    window.WriteAtPos((218, 4), "8. háromszög", "\x1b[38;2;255;255;255m");
+                    window.WriteAtPos((232, 4), "9. kör", "\x1b[38;2;255;255;255m");
                     break;
                 case "triangle":
-                    selectedShape = shape;
+                    window.WriteAtPos((193, 4), "6. vonal", "\x1b[38;2;255;255;255m");
+                    window.WriteAtPos((204, 4), "7. téglalap", "\x1b[38;2;255;255;255m");
+                    window.WriteAtPos((218, 4), "8. háromszög", "\x1b[38;2;220;0;0m");
+                    window.WriteAtPos((232, 4), "9. kör", "\x1b[38;2;255;255;255m");
                     break;
                 case "circle":
-                    selectedShape = shape;
+                    window.WriteAtPos((193, 4), "6. vonal", "\x1b[38;2;255;255;255m");
+                    window.WriteAtPos((204, 4), "7. téglalap", "\x1b[38;2;255;255;255m");
+                    window.WriteAtPos((218, 4), "8. háromszög", "\x1b[38;2;255;255;255m");
+                    window.WriteAtPos((232, 4), "9. kör", "\x1b[38;2;220;0;0m");
                     break;
                 default:
                     break;
@@ -250,25 +329,24 @@ namespace ghfnvtz
         static void UpdateMode(string mode)
         {
             (int, int) pos = Console.GetCursorPosition();
+            currentMode = mode;
+
             switch (mode)
             {
                 case "draw":
                     window.WriteAtPos((7, Console.WindowHeight / 32), "1. rajz", "\x1b[38;2;220;0;0m");
                     window.WriteAtPos((17, Console.WindowHeight / 32), "2. alakzat", "\x1b[38;2;255;255;255m");
                     window.WriteAtPos((30, Console.WindowHeight / 32), "3. segítség", "\x1b[38;2;255;255;255m");
-                    currentMode = mode;
                     break;
                 case "shape":
                     window.WriteAtPos((7, Console.WindowHeight / 32), "1. rajz", "\x1b[38;2;255;255;255m");
                     window.WriteAtPos((17, Console.WindowHeight / 32), "2. alakzat", "\x1b[38;2;220;0;0m");
                     window.WriteAtPos((30, Console.WindowHeight / 32), "3. segítség", "\x1b[38;2;255;255;255m");
-                    currentMode = mode;
                     break;
                 case "help":
                     window.WriteAtPos((7, Console.WindowHeight / 32), "1. rajz", "\x1b[38;2;255;255;255m");
                     window.WriteAtPos((17, Console.WindowHeight / 32), "2. alakzat", "\x1b[38;2;255;255;255m");
                     window.WriteAtPos((30, Console.WindowHeight / 32), "3. segítség", "\x1b[38;2;220;0;0m");
-                    currentMode = mode;
                     break;
                 default:
                     break;

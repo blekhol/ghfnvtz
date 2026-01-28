@@ -53,6 +53,15 @@ namespace ghfnvtz
             }
         }
 
+        public void DrawWindow()
+        {
+            Console.SetCursorPosition(0, 0);
+            for (int i = 0; i < windowState.Length; i++)
+            {
+                Console.Write(windowState[i].ToString());
+            }
+        }
+
         public void WriteAtPos((int x, int y) pos, string text, string foregroundColor)
         {
             Console.SetCursorPosition(pos.x, pos.y);

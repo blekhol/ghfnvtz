@@ -212,8 +212,40 @@ namespace ghfnvtz
             }
 
             //alakzatok
+            string kivalasztottText = "Kiválaszott pontok: ";
+            string alakzatText = "Alakzatok: 6. vonal / 7. téglalap / 8.háromszög / 9. kör";
+			window.WriteAtPos((Console.WindowWidth - 2 - alakzatText.Length, 4), alakzatText, "\x1b[38;2;255;255;255m");
+            UpdateShape("line");
+		}
 
-        }
+        static void UpdateShape(string shape)
+        {
+			(int, int) pos = Console.GetCursorPosition();
+
+            switch (shape)
+            {
+                case "line":
+                    window.WriteAtPos((193, 4), "6. vonal", "\x1b[38;2;220;0;0m");
+                    window.WriteAtPos((204, 4), "7. téglalap", "\x1b[38;2;255;255;255m");
+                    window.WriteAtPos((218, 4), "8. háromszög", "\x1b[38;2;255;255;255m");
+                    window.WriteAtPos((232, 4), "9. kör", "\x1b[38;2;255;255;255m");
+					selectedShape = shape;
+                    break;
+                case "rectangle":
+                    selectedShape = shape;
+                    break;
+                case "triangle":
+                    selectedShape = shape;
+                    break;
+                case "circle":
+                    selectedShape = shape;
+                    break;
+                default:
+                    break;
+			}
+
+			Console.SetCursorPosition(pos.Item1, pos.Item2);
+		}
 
         static void UpdateMode(string mode)
         {

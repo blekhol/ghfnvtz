@@ -56,11 +56,24 @@ namespace ghfnvtz
         public void DrawWindow()
         {
             Console.SetCursorPosition(0, 0);
+            List<string> stringState = [];
             for (int i = 0; i < windowState.Length; i++)
             {
-                Console.Write(windowState[i].ToString());
-            }
-        }
+                stringState.Add(windowState[i].ToString());
+			}
+            Console.Write(string.Join("", stringState));
+		}
+
+        public void DrawHelp()
+        {
+            DrawRectangle((0, Console.WindowHeight / 16 + 1), (Console.WindowWidth - 1, Console.WindowHeight - 1), 'X', false);
+            WriteAtPos((3, Console.WindowHeight / 16 + 4), "Módok között váltás: ", "\x1b[38;2;255;255;255m");
+			WriteAtPos((3, Console.WindowHeight / 16 + 6), "Az 1, 2 és 3-as gombokkal lehet váltani a 3 féle mód között: ", "\x1b[38;2;255;255;255m");
+            WriteAtPos((7, Console.WindowHeight / 16 + 8), "Rajz mód: 1-es gombbal lehet kiválasztani, ebben a módban lehet a színek között is váltogatni a megfelelő betűkkel. A space lenyomásakor rajzol a kurzor helyén a kiválasztott színnel", "\x1b[38;2;255;255;255m");
+            WriteAtPos((7, Console.WindowHeight / 16 + 11), "Alakzat mód: 2-es gombbal lehet kiválasztani, ebben a módban lehet alakzatok rajzolni. A space-el lehet kiválasztani a pontokat, és a kiválasztott színnel fogja megrajzolni. Az utolsó gomb lenyomásakor, ha a shiftet is nyomjuk,", "\x1b[38;2;255;255;255m");
+            WriteAtPos((7, Console.WindowHeight / 16 + 13), "akkor kitölti az alakzatot, egyébként csak a körvonalát rajzolja meg.", "\x1b[38;2;255;255;255m");
+            WriteAtPos((7, Console.WindowHeight / 16 + 16), "Segítség mód: 3-as gombbal lehet felhozni ezt az ablakot, 1 vagy 2-es gombbal lehet visszamenni a rajzfelületre. ", "\x1b[38;2;255;255;255m");
+		}
 
         public void WriteAtPos((int x, int y) pos, string text, string foregroundColor)
         {

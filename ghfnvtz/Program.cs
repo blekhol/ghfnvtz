@@ -4,23 +4,25 @@ namespace ghfnvtz
 {
     internal class Program
     {
-        static Window helpWindow = new Window();
-
         static Window window = new Window();
-        static string currentMode = "draw";
+        
+		static string currentMode = "draw";
         static string selectedColor = "\x1b[48;2;255;255;255m";
         static string selectedShape = "rectangle";
         static List<(int x, int y)> selectedShapePoints = new List<(int, int)>();
 
-        static void Main(string[] args)
+		static void Main(string[] args)
         {
 			window.Setup();
-
             RajzoloSetup();
 
-            Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
+			Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
+			//window.WriteAtPos((Console.WindowWidth / 2, Console.WindowHeight / 2), "┌┐", "\x1b[38;255;255;255m");
+			//window.WriteAtPos((Console.WindowWidth / 2, Console.WindowHeight / 2 + 1), "├┤", "\x1b[38;255;255;255m");
+			window.WriteAtPos((Console.WindowWidth / 2, Console.WindowHeight / 2), "├┐", "\x1b[38;255;255;255m");
+			window.WriteAtPos((Console.WindowWidth / 2, Console.WindowHeight / 2 + 1), "├┤", "\x1b[38;255;255;255m");
 
-            while (true)
+			while (true)
             {
                 var key = Console.ReadKey(true);
                 
@@ -35,7 +37,8 @@ namespace ghfnvtz
                         break;
                     case ConsoleKey.D3:
                         UpdateMode("help");
-                        break;
+                        window.DrawHelp();
+						break;
                     #endregion
 
                     #region Cursor mozgás
@@ -257,7 +260,7 @@ namespace ghfnvtz
             }
         }
 
-        static void RajzoloSetup()
+		static void RajzoloSetup()
         {
             //UI
             //mode jelzp

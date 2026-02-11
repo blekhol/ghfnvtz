@@ -63,7 +63,7 @@ namespace ghfnvtz
 			}
             Console.Write(string.Join("", stringState));
 		}
-
+        
         public void DrawHelp()
         {
             var windowStatecopy = windowState.Select(p => new Pixel(p)).ToArray();

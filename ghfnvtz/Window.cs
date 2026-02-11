@@ -66,13 +66,28 @@ namespace ghfnvtz
 
         public void DrawHelp()
         {
-            DrawRectangle((0, Console.WindowHeight / 16 + 1), (Console.WindowWidth - 1, Console.WindowHeight - 1), 'X', false);
+            var windowStatecopy = windowState.Select(p => new Pixel(p)).ToArray();
+
+			DrawRectangle((0, Console.WindowHeight / 16 + 1), (Console.WindowWidth - 1, Console.WindowHeight - 1), 'X', false);
             WriteAtPos((3, Console.WindowHeight / 16 + 4), "Módok között váltás: ", "\x1b[38;2;255;255;255m");
 			WriteAtPos((3, Console.WindowHeight / 16 + 6), "Az 1, 2 és 3-as gombokkal lehet váltani a 3 féle mód között: ", "\x1b[38;2;255;255;255m");
             WriteAtPos((7, Console.WindowHeight / 16 + 8), "Rajz mód: 1-es gombbal lehet kiválasztani, ebben a módban lehet a színek között is váltogatni a megfelelő betűkkel. A space lenyomásakor rajzol a kurzor helyén a kiválasztott színnel", "\x1b[38;2;255;255;255m");
             WriteAtPos((7, Console.WindowHeight / 16 + 11), "Alakzat mód: 2-es gombbal lehet kiválasztani, ebben a módban lehet alakzatok rajzolni. A space-el lehet kiválasztani a pontokat, és a kiválasztott színnel fogja megrajzolni. Az utolsó gomb lenyomásakor, ha a shiftet is nyomjuk,", "\x1b[38;2;255;255;255m");
             WriteAtPos((7, Console.WindowHeight / 16 + 13), "akkor kitölti az alakzatot, egyébként csak a körvonalát rajzolja meg.", "\x1b[38;2;255;255;255m");
             WriteAtPos((7, Console.WindowHeight / 16 + 16), "Segítség mód: 3-as gombbal lehet felhozni ezt az ablakot, 1 vagy 2-es gombbal lehet visszamenni a rajzfelületre. ", "\x1b[38;2;255;255;255m");
+			WriteAtPos((7, Console.WindowHeight / 16 + 19), "Kör: A kiválasztott pont lesz a kör középpontja, utána a uiba viszi a kurzort ahol meg lehet adni a kör sugarát.", "\x1b[38;2;255;255;255m");
+
+            ConsoleKey input;
+			do
+			{
+				Console.SetCursorPosition(3, Console.WindowHeight / 16 + 22);
+				Console.Write("Escape vagy megnyomásával eltűnik", "\x1b[38;2;255;255;255m");
+                input = Console.ReadKey(true).Key;
+			}
+			while (input != ConsoleKey.Escape);
+
+            windowState = windowStatecopy;
+            DrawWindow();
 		}
 
         public void WriteAtPos((int x, int y) pos, string text, string foregroundColor)

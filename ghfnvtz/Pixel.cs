@@ -19,6 +19,13 @@ namespace ghfnvtz
             this.character = character;
         }
 
+        public Pixel(Pixel other)
+        {
+            this.backgroundColor = other.backgroundColor;
+            this.foregroundColor = other.foregroundColor;
+            this.character = other.character;
+		}
+
         public string BackgroundColor { get => backgroundColor; set => backgroundColor = value; }
         public string ForegroundColor { get => foregroundColor; set => foregroundColor = value; }
         public char Character { get => character; set => character = value; }

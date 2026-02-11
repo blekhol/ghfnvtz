@@ -17,10 +17,7 @@ namespace ghfnvtz
             RajzoloSetup();
 
 			Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
-			//window.WriteAtPos((Console.WindowWidth / 2, Console.WindowHeight / 2), "┌┐", "\x1b[38;255;255;255m");
-			//window.WriteAtPos((Console.WindowWidth / 2, Console.WindowHeight / 2 + 1), "├┤", "\x1b[38;255;255;255m");
-			window.WriteAtPos((Console.WindowWidth / 2, Console.WindowHeight / 2), "├┐", "\x1b[38;255;255;255m");
-			window.WriteAtPos((Console.WindowWidth / 2, Console.WindowHeight / 2 + 1), "├┤", "\x1b[38;255;255;255m");
+
 
 			while (true)
             {
@@ -185,9 +182,9 @@ namespace ghfnvtz
                     case ConsoleKey.D8:
                         UpdateShape("triangle");
                         break;
-                    //case ConsoleKey.D9:
-                    //    UpdateShape("circle");
-                    //    break;
+                    case ConsoleKey.D9:
+                        UpdateShape("circle");
+                        break;
                     #endregion
 
                     #region alakzat rajzolás
@@ -198,16 +195,33 @@ namespace ghfnvtz
                         }
                         else if (currentMode == "shape")
                         {
-                            //if (selectedShape == "circle")
-                            //{
-                            //    selectedShapePoints.Add((Console.CursorLeft, Console.CursorTop));
+                            if (selectedShape == "circle")
+                            {
+                                selectedShapePoints.Add((Console.CursorLeft, Console.CursorTop));
 
-                            //    Console.Write("sugár: ");
-                            //    int r = int.Parse(Console.ReadLine());
-                            //    window.DrawCircle(selectedShapePoints[0], r, selectedColor, key.Modifiers.HasFlag(ConsoleModifiers.Shift));
-                            //    Console.SetCursorPosition(selectedShapePoints[0].x, selectedShapePoints[0].y);
-                            //    window.WriteAtPos(selectedShapePoints[0], "       ", selectedColor);
-                            //}
+                                Console.SetCursorPosition(171 + "Sugár: ".Length, 4);
+                                Console.SetCursorPosition(171 + "Sugár: ".Length, 4);
+
+                                string input = Console.ReadLine().Trim();
+
+								if (int.TryParse(input, out int r))
+                                {
+                                    window.DrawCircle(selectedShapePoints[0], r, selectedColor, key.Modifiers.HasFlag(ConsoleModifiers.Shift));
+                                }
+
+                                string resetMode = currentMode;
+                                string resetShape = selectedShape;
+
+								//hogy ne menjen bele a uiba a kör és ha túl hosszú lenne a megadott input a sugárnál
+								RajzoloSetup();
+
+                                //a rajzoló setup resetelné
+                                UpdateMode(resetMode);
+                                UpdateShape(resetShape);
+
+								Console.SetCursorPosition(selectedShapePoints[0].x, selectedShapePoints[0].y);
+								selectedShapePoints.Clear();
+							}
 
                             if (selectedShape == "line")
                             {
@@ -289,6 +303,8 @@ namespace ghfnvtz
             string alakzatText = "Alakzatok: 6. vonal / 7. téglalap / 8.háromszög / 9. kör";
 			window.WriteAtPos((Console.WindowWidth - 2 - alakzatText.Length, 4), alakzatText, "\x1b[38;2;255;255;255m");
             UpdateShape(selectedShape);
+
+            window.WriteAtPos((171, 4), "Sugár: ", "\x1b[38;2;255;255;255m");
 		}
 
         static void UpdateShape(string shape)
